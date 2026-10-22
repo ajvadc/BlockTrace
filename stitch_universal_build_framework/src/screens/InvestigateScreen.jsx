@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { GraphCanvas } from '../components/GraphCanvas';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { BookOpen, ArrowRight, Search } from 'lucide-react';
 import {
   loadCuratedCase,
   expandWallet,
@@ -275,49 +276,55 @@ export const InvestigateScreen = () => {
       <div className="flex flex-1 overflow-hidden relative">
         {/* Left Panel: Investigation Tools Sidebar */}
         <div className="w-[360px] bg-surface flex flex-col border-r border-outline-variant/60 shadow-lg z-10 overflow-y-auto">
-          {/* Section 1: Example Investigations */}
-          <div className="p-4 bg-surface-container-low border-b border-outline-variant/40">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="font-label-caps text-xs uppercase tracking-wider text-on-surface-variant font-bold flex items-center gap-1.5">
-                <span className="material-symbols-outlined text-[16px] text-primary">book</span>
-                <span>Example Investigations</span>
+            {/* Section 1: Example Investigations */}
+            <div className="p-4 bg-surface-container-low border-b border-outline-variant/40">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-label-caps text-xs uppercase tracking-wider text-on-surface-variant font-bold flex items-center gap-1.5">
+                  <BookOpen className="w-4 h-4 text-primary shrink-0" />
+                  <span>Example Investigations ({((curatedCases && curatedCases.length) || 6)})</span>
+                </h3>
+              </div>
+
+              <div className="flex flex-col gap-2 max-h-[340px] overflow-y-auto pr-1">
+                {((curatedCases && curatedCases.length > 0)
+                  ? curatedCases
+                  : [
+                      { name: 'Ronin Bridge Hack ($600M, 2022)', badge: '$600M', sub: 'Lazarus Group OFAC' },
+                      { name: 'Poly Network Hack ($611M, 2021)', badge: '$611M', sub: 'Cross-chain DeFi' },
+                      { name: 'Wormhole Bridge Hack ($321M, 2022)', badge: '$321M', sub: 'Solana-ETH Bridge' },
+                      { name: 'Euler Finance Exploit ($197M, 2023)', badge: '$197M', sub: 'Flash-Loan Attack' },
+                      { name: 'Nomad Bridge Hack ($190M, 2022)', badge: '$190M', sub: 'Cross-Chain Bridge' },
+                      { name: 'FTX Accounts Drainer ($477M, 2022)', badge: '$477M', sub: 'Exchange Drainer' },
+                    ]
+                ).map((c) => (
+                  <button
+                    key={c.name}
+                    onClick={() => handleLoadCuratedCase(c.name)}
+                    disabled={actionLoading}
+                    className="flex items-center justify-between p-2.5 rounded-lg bg-surface hover:bg-primary/10 border border-outline-variant/50 group transition-all text-left shadow-xs disabled:opacity-50"
+                  >
+                    <div className="flex flex-col pr-1 overflow-hidden">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-body-sm text-xs text-on-surface font-semibold group-hover:text-primary transition-colors truncate">
+                          {c.name}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-on-surface-variant font-mono truncate">
+                        {c.sub || c.description}
+                      </span>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-on-surface-variant/40 group-hover:text-primary transition-transform group-hover:translate-x-0.5 shrink-0 ml-1" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Section 2: Investigate a Wallet Form */}
+            <div className="p-4 border-b border-outline-variant/40">
+              <h3 className="font-headline-md text-sm font-bold text-on-surface mb-3 flex items-center gap-1.5">
+                <Search className="w-4 h-4 text-primary shrink-0" />
+                <span>Investigate a Wallet</span>
               </h3>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              {[
-                { name: 'Ronin Bridge Hack ($600M, 2022)', badge: '$600M', sub: 'Lazarus Group OFAC' },
-                { name: 'Poly Network Hack ($611M, 2021)', badge: '$611M', sub: 'Cross-chain DeFi' },
-                { name: 'Wormhole Bridge Hack ($321M, 2022)', badge: '$321M', sub: 'Solana-ETH Bridge' },
-              ].map((c) => (
-                <button
-                  key={c.name}
-                  onClick={() => handleLoadCuratedCase(c.name)}
-                  disabled={actionLoading}
-                  className="flex items-center justify-between p-2.5 rounded-lg bg-surface hover:bg-primary/10 border border-outline-variant/50 group transition-all text-left shadow-xs disabled:opacity-50"
-                >
-                  <div className="flex flex-col">
-                    <span className="font-body-sm text-xs text-on-surface font-semibold group-hover:text-primary transition-colors">
-                      {c.name}
-                    </span>
-                    <span className="text-[10px] text-on-surface-variant font-address-md">
-                      {c.sub}
-                    </span>
-                  </div>
-                  <span className="material-symbols-outlined text-on-surface-variant/40 group-hover:text-primary text-[18px] transition-transform group-hover:translate-x-0.5">
-                    arrow_forward
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Section 2: Investigate a Wallet Form */}
-          <div className="p-4 border-b border-outline-variant/40">
-            <h3 className="font-headline-md text-sm font-bold text-on-surface mb-3 flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-primary text-[18px]">search</span>
-              <span>Investigate a Wallet</span>
-            </h3>
 
             <form onSubmit={handleExpandWallet} className="flex flex-col gap-3">
               {/* Chain selector */}

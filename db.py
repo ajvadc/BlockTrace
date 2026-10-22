@@ -36,6 +36,15 @@ DB_BACKEND = os.getenv("DB_BACKEND", "auto").lower()
 SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", "blocktrace.db")
 
 
+def normalize_address(addr: Any) -> str:
+    """Normalizes 42-character EVM hex addresses to lowercase to prevent graph splits,
+    while preserving synthetic test identifiers (e.g. '0xHUB', '0xA')."""
+    s = str(addr or "").strip()
+    if len(s) == 42 and s.startswith(("0x", "0X")):
+        return s.lower()
+    return s
+
+
 # ==================== SQLite Backend ====================
 
 class SQLiteBackend:
@@ -86,8 +95,8 @@ class SQLiteBackend:
         new_wallets = set()
         with self._get_connection() as conn:
             for tx in transactions:
-                from_addr = str(tx.get("from") or "").strip().lower()
-                to_addr = str(tx.get("to") or "").strip().lower()
+                from_addr = normalize_address(tx.get("from"))
+                to_addr = normalize_address(tx.get("to"))
                 tx_hash = tx.get("hash")
                 if not from_addr or not to_addr or not tx_hash:
                     continue
@@ -399,8 +408,8 @@ class Neo4jBackend:
         new_wallets = set()
         with self.driver.session(database=self.database) as session:
             for tx in transactions:
-                from_addr = str(tx.get("from") or "").strip().lower()
-                to_addr = str(tx.get("to") or "").strip().lower()
+                from_addr = normalize_address(tx.get("from"))
+                to_addr = normalize_address(tx.get("to"))
                 if not to_addr or not from_addr:
                     continue
                 try:

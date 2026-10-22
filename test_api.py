@@ -46,9 +46,10 @@ def test_curated_cases_list():
     res = client.get("/curated-cases")
     assert res.status_code == 200
     cases = res.json()["cases"]
-    assert len(cases) == 3
+    assert len(cases) >= 6
     case_names = [c["name"] for c in cases]
     assert "Ronin Bridge Hack ($600M, 2022)" in case_names
+    assert "Euler Finance Exploit ($197M, 2023)" in case_names
 
 
 def test_load_curated_case_ronin():
@@ -56,7 +57,7 @@ def test_load_curated_case_ronin():
     assert res.status_code == 200
     data = res.json()
     assert data["wallets_visited"] > 0
-    assert data["start_wallet"] == "0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+    assert data["start_wallet"].lower() == "0x098b716b8aaf21512996dc57eb0615e2383e2f96"
 
     # Verify graph has edges
     res_graph = client.get("/graph")

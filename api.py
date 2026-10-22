@@ -54,12 +54,16 @@ CURATED_CASES = {
     "Ronin Bridge Hack ($600M, 2022)": {
         "address": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
         "chainid": 1,
+        "badge": "$600M",
+        "sub": "Lazarus Group OFAC",
         "description": "Wallet linked to the Axie Infinity / Ronin Bridge exploit. "
                         "Sanctioned by the U.S. Treasury (OFAC) and attributed to the Lazarus Group."
     },
     "Poly Network Hack ($611M, 2021)": {
         "address": "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963",
         "chainid": 1,
+        "badge": "$611M",
+        "sub": "Cross-chain DeFi",
         "description": "Largest DeFi exploit at the time, draining assets across Ethereum, BSC, "
                         "and Polygon. Most funds were later voluntarily returned by the attacker, "
                         "but the full on-chain trail remains public."
@@ -67,8 +71,34 @@ CURATED_CASES = {
     "Wormhole Bridge Hack ($321M, 2022)": {
         "address": "0x629e7da20197a5429d30da36e77d06cdf796b71a",
         "chainid": 1,
+        "badge": "$321M",
+        "sub": "Solana-ETH Bridge",
         "description": "Exploit of the Ethereum-Solana Wormhole token bridge. This address is "
                         "directly labeled 'Wormhole Network Exploiter' on Etherscan."
+    },
+    "Euler Finance Exploit ($197M, 2023)": {
+        "address": "0xb66cd966670d962c227b3eaba30a872dbfb995db",
+        "chainid": 1,
+        "badge": "$197M",
+        "sub": "Flash-Loan Attack",
+        "description": "Flash loan donation attack against Euler Finance protocol, followed by "
+                        "Tornado Cash laundering and eventual on-chain return negotiations."
+    },
+    "Nomad Bridge Hack ($190M, 2022)": {
+        "address": "0xa5c45e07cfa66784742931720ddc9f2441ed01c1",
+        "chainid": 1,
+        "badge": "$190M",
+        "sub": "Cross-Chain Bridge",
+        "description": "Flawed replica contract initialization permitted arbitrary message spoofing, "
+                        "leading to massive decentralized crowd-looting across over 300 participant addresses."
+    },
+    "FTX Accounts Drainer ($477M, 2022)": {
+        "address": "0x59abf3837fa962d6853b4cc0a19513aa031fd32b",
+        "chainid": 1,
+        "badge": "$477M",
+        "sub": "Exchange Drainer",
+        "description": "Unauthorized extraction of digital assets from FTX storage during bankruptcy "
+                        "filing, featuring rapid multi-DEX swaps and peel chain dispersion."
     }
 }
 
@@ -231,7 +261,14 @@ def list_chains():
 def list_curated_cases():
     return {
         "cases": [
-            {"name": name, "address": info["address"], "chainid": info["chainid"], "description": info["description"]}
+            {
+                "name": name,
+                "address": info["address"],
+                "chainid": info["chainid"],
+                "badge": info.get("badge", ""),
+                "sub": info.get("sub", ""),
+                "description": info["description"]
+            }
             for name, info in CURATED_CASES.items()
         ]
     }

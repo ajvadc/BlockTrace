@@ -263,6 +263,9 @@ KNOWN_ENTITIES = {
     "0x098b716b8aaf21512996dc57eb0615e2383e2f96": "Ronin Bridge Hacker (Lazarus Group)",
     "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963": "Poly Network Hacker",
     "0x629e7da20197a5429d30da36e77d06cdf796b71a": "Wormhole Network Exploiter",
+    "0xb66cd966670d962c227b3eaba30a872dbfb995db": "Euler Finance Exploiter",
+    "0xa5c45e07cfa66784742931720ddc9f2441ed01c1": "Nomad Bridge Exploiter",
+    "0x59abf3837fa962d6853b4cc0a19513aa031fd32b": "FTX Accounts Drainer",
 }
 
 
