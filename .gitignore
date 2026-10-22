@@ -1,0 +1,12 @@
+.env
+node_modules/
+__pycache__/
+.pytest_cache/
+venv/
+*.pyc
+cases/
+investigation_report.pdf
+graph.html
+*.db*
+stitch_universal_build_framework/node_modules/
+stitch_universal_build_framework/dist/
