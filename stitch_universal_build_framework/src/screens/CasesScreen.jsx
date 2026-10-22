@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { ConfirmModal } from '../components/ConfirmModal';
+import { AlertTriangle, CheckCircle, Network, Download } from 'lucide-react';
 import {
   fetchSavedCases,
   saveCase,
@@ -150,20 +151,22 @@ export const CasesScreen = () => {
 
             <div className="flex items-center gap-3 mt-2">
               <span
-                className={`inline-flex items-center gap-1 px-3 py-1 rounded-full font-label-caps text-xs font-bold ${
+                className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full font-label-caps text-xs font-bold ${
                   sanctions.length > 0
                     ? 'bg-error/15 text-error border border-error/30'
                     : 'bg-[#e8f5e9] text-[#2e682c]'
                 }`}
               >
-                <span className="material-symbols-outlined text-[14px]">
-                  {sanctions.length > 0 ? 'warning' : 'verified'}
-                </span>
+                {sanctions.length > 0 ? (
+                  <AlertTriangle className="w-3.5 h-3.5 text-error shrink-0" />
+                ) : (
+                  <CheckCircle className="w-3.5 h-3.5 text-[#2e682c] shrink-0" />
+                )}
                 <span>{sanctions.length > 0 ? `${sanctions.length} Sanction Flags` : 'Clean Sanctions'}</span>
               </span>
 
-              <span className="inline-flex items-center gap-1 px-3 py-1 bg-surface text-on-surface rounded-full font-label-caps text-xs font-bold border border-outline-variant/60">
-                <span className="material-symbols-outlined text-[14px]">account_tree</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-surface text-on-surface rounded-full font-label-caps text-xs font-bold border border-outline-variant/60">
+                <Network className="w-3.5 h-3.5 text-primary shrink-0" />
                 <span>{summary.wallets_traced} Wallets · {summary.transactions_mapped} Txs</span>
               </span>
             </div>
@@ -176,7 +179,7 @@ export const CasesScreen = () => {
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white hover:bg-primary-container transition-all font-label-caps text-xs uppercase rounded-xl shadow-md hover:shadow-lg font-bold"
             >
-              <span className="material-symbols-outlined text-[18px]">download</span>
+              <Download className="w-4 h-4 shrink-0" />
               <span>Download PDF Report</span>
             </a>
           </div>

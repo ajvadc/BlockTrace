@@ -1,4 +1,5 @@
 import React from 'react';
+import { AlertTriangle, Info } from 'lucide-react';
 
 export const ConfirmModal = ({ isOpen, title, message, confirmText = 'Confirm', confirmVariant = 'danger', onConfirm, onCancel }) => {
   if (!isOpen) return null;
@@ -10,9 +11,11 @@ export const ConfirmModal = ({ isOpen, title, message, confirmText = 'Confirm', 
           <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${
             confirmVariant === 'danger' ? 'bg-error/15 text-error' : 'bg-primary/15 text-primary'
           }`}>
-            <span className="material-symbols-outlined text-[22px]">
-              {confirmVariant === 'danger' ? 'warning' : 'info'}
-            </span>
+            {confirmVariant === 'danger' ? (
+              <AlertTriangle className="w-5 h-5 text-error" />
+            ) : (
+              <Info className="w-5 h-5 text-primary" />
+            )}
           </div>
           <h3 className="font-headline-md text-lg text-on-surface font-semibold">{title}</h3>
         </div>

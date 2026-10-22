@@ -1,5 +1,6 @@
 import React from 'react';
 import { useInvestigation } from '../context/InvestigationContext';
+import { AlertCircle, CheckCircle, AlertTriangle, Info, X } from 'lucide-react';
 
 export const ToastContainer = () => {
   const { toasts, removeToast } = useInvestigation();
@@ -26,8 +27,16 @@ export const ToastContainer = () => {
                 : 'bg-surface-container border-outline-variant text-on-surface'
             }`}
           >
-            <span className="material-symbols-outlined text-[20px] shrink-0 mt-0.5">
-              {isError ? 'error' : isSuccess ? 'check_circle' : isWarning ? 'warning' : 'info'}
+            <span className="shrink-0 mt-0.5">
+              {isError ? (
+                <AlertCircle className="w-5 h-5 text-red-600" />
+              ) : isSuccess ? (
+                <CheckCircle className="w-5 h-5 text-emerald-600" />
+              ) : isWarning ? (
+                <AlertTriangle className="w-5 h-5 text-amber-600" />
+              ) : (
+                <Info className="w-5 h-5 text-blue-600" />
+              )}
             </span>
             <div className="flex-1 text-sm font-medium leading-snug break-words">
               {toast.message}
@@ -36,7 +45,7 @@ export const ToastContainer = () => {
               onClick={() => removeToast(toast.id)}
               className="text-on-surface-variant hover:text-on-surface opacity-60 hover:opacity-100 transition-opacity shrink-0"
             >
-              <span className="material-symbols-outlined text-[16px]">close</span>
+              <X className="w-4 h-4" />
             </button>
           </div>
         );

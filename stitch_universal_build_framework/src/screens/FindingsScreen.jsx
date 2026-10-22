@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { getReportUrl } from '../api/client';
+import { AlertTriangle, CheckCircle, ShieldAlert, FileText, Check } from 'lucide-react';
 
 export const FindingsScreen = () => {
   const {
@@ -115,19 +116,21 @@ export const FindingsScreen = () => {
         <section className="lg:col-span-1 flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-headline-md text-lg font-bold text-on-surface flex items-center gap-1.5">
-              <span className="material-symbols-outlined text-error text-[20px]">policy</span>
+              <ShieldAlert className="w-5 h-5 text-red-600 shrink-0" />
               <span>Sanctions Screening</span>
             </h3>
             <span
               className={`px-2.5 py-0.5 rounded-full font-label-caps text-[11px] font-bold flex items-center gap-1 ${
                 sanctions.length > 0
-                  ? 'bg-error/15 text-error border border-error/30'
-                  : 'bg-[#e8f5e9] text-[#2e682c]'
+                  ? 'bg-red-50 text-red-700 border border-red-200'
+                  : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
               }`}
             >
-              <span className="material-symbols-outlined text-[14px]">
-                {sanctions.length > 0 ? 'warning' : 'check'}
-              </span>
+              {sanctions.length > 0 ? (
+                <AlertTriangle className="w-3.5 h-3.5 text-red-600 shrink-0" />
+              ) : (
+                <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              )}
               <span>{sanctions.length} {sanctions.length === 1 ? 'Hit' : 'Hits'}</span>
             </span>
           </div>
