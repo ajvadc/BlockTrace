@@ -86,8 +86,8 @@ class SQLiteBackend:
         new_wallets = set()
         with self._get_connection() as conn:
             for tx in transactions:
-                from_addr = tx.get("from")
-                to_addr = tx.get("to")
+                from_addr = str(tx.get("from") or "").strip().lower()
+                to_addr = str(tx.get("to") or "").strip().lower()
                 tx_hash = tx.get("hash")
                 if not from_addr or not to_addr or not tx_hash:
                     continue
@@ -399,7 +399,8 @@ class Neo4jBackend:
         new_wallets = set()
         with self.driver.session(database=self.database) as session:
             for tx in transactions:
-                from_addr, to_addr = tx.get("from"), tx.get("to")
+                from_addr = str(tx.get("from") or "").strip().lower()
+                to_addr = str(tx.get("to") or "").strip().lower()
                 if not to_addr or not from_addr:
                     continue
                 try:

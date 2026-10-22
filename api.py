@@ -52,20 +52,20 @@ CHAIN_OPTIONS = {
 
 CURATED_CASES = {
     "Ronin Bridge Hack ($600M, 2022)": {
-        "address": "0x098B716B8Aaf21512996dC57EB0615e2383E2f96",
+        "address": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
         "chainid": 1,
         "description": "Wallet linked to the Axie Infinity / Ronin Bridge exploit. "
                         "Sanctioned by the U.S. Treasury (OFAC) and attributed to the Lazarus Group."
     },
     "Poly Network Hack ($611M, 2021)": {
-        "address": "0xC8a65Fadf0e0dDAf421F28FEAb69Bf6E2E589963",
+        "address": "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963",
         "chainid": 1,
         "description": "Largest DeFi exploit at the time, draining assets across Ethereum, BSC, "
                         "and Polygon. Most funds were later voluntarily returned by the attacker, "
                         "but the full on-chain trail remains public."
     },
     "Wormhole Bridge Hack ($321M, 2022)": {
-        "address": "0x629e7Da20197a5429d30da36E77D06CdF796b71a",
+        "address": "0x629e7da20197a5429d30da36e77d06cdf796b71a",
         "chainid": 1,
         "description": "Exploit of the Ethereum-Solana Wormhole token bridge. This address is "
                         "directly labeled 'Wormhole Network Exploiter' on Etherscan."

@@ -43,45 +43,51 @@ export const GraphCanvas = ({ filterQuery = '', onSelectWallet }) => {
     const nodeMap = new Map();
 
     filteredEdges.forEach((e) => {
-      if (!nodeMap.has(e.from)) {
-        const fromLower = e.from.toLowerCase();
-        nodeMap.set(e.from, {
-          id: e.from,
-          address: e.from,
-          isSanctioned: sanctionedSet.has(fromLower),
-          label: entityLabels[fromLower] || null,
+      const fromKey = (e.from || '').toLowerCase().trim();
+      const toKey = (e.to || '').toLowerCase().trim();
+      if (!fromKey || !toKey) return;
+
+      if (!nodeMap.has(fromKey)) {
+        nodeMap.set(fromKey, {
+          id: fromKey,
+          address: fromKey,
+          isSanctioned: sanctionedSet.has(fromKey),
+          label: entityLabels[fromKey] || null,
           inDegree: 0,
           outDegree: 0,
           totalValue: 0,
         });
       }
-      if (!nodeMap.has(e.to)) {
-        const toLower = e.to.toLowerCase();
-        nodeMap.set(e.to, {
-          id: e.to,
-          address: e.to,
-          isSanctioned: sanctionedSet.has(toLower),
-          label: entityLabels[toLower] || null,
+      if (!nodeMap.has(toKey)) {
+        nodeMap.set(toKey, {
+          id: toKey,
+          address: toKey,
+          isSanctioned: sanctionedSet.has(toKey),
+          label: entityLabels[toKey] || null,
           inDegree: 0,
           outDegree: 0,
           totalValue: 0,
         });
       }
 
-      const fromNode = nodeMap.get(e.from);
-      const toNode = nodeMap.get(e.to);
+      const fromNode = nodeMap.get(fromKey);
+      const toNode = nodeMap.get(toKey);
       fromNode.outDegree += 1;
       toNode.inDegree += 1;
       fromNode.totalValue += Number(e.value || 0);
       toNode.totalValue += Number(e.value || 0);
     });
 
-    const linksArray = filteredEdges.map((e, index) => ({
-      id: `${e.from}-${e.to}-${index}`,
-      source: e.from,
-      target: e.to,
-      value: Number(e.value || 0),
-    }));
+    const linksArray = filteredEdges.map((e, index) => {
+      const src = (e.from || '').toLowerCase().trim();
+      const tgt = (e.to || '').toLowerCase().trim();
+      return {
+        id: `${src}-${tgt}-${index}`,
+        source: src,
+        target: tgt,
+        value: Number(e.value || 0),
+      };
+    });
 
     return {
       nodes: Array.from(nodeMap.values()),
@@ -162,11 +168,18 @@ export const GraphCanvas = ({ filterQuery = '', onSelectWallet }) => {
         d3
           .forceLink(links)
           .id((d) => d.id)
-          .distance(120)
+          .distance((d) => {
+            const deg = Math.max(d.source?.outDegree || 0, d.target?.inDegree || 0);
+            return 110 + Math.min(80, deg * 4);
+          })
       )
-      .force('charge', d3.forceManyBody().strength(-380))
+      .force('charge', d3.forceManyBody().strength(-520))
       .force('center', d3.forceCenter(0, 0))
-      .force('collision', d3.forceCollide().radius(40));
+      .force('collision', d3.forceCollide().radius((d) => {
+        const degree = (d.inDegree || 0) + (d.outDegree || 0);
+        const radius = Math.max(14, Math.min(26, 14 + degree * 1.2));
+        return radius + 30;
+      }));
 
     // Render Links
     const link = g
@@ -250,19 +263,23 @@ export const GraphCanvas = ({ filterQuery = '', onSelectWallet }) => {
       .attr('stroke-width', 2.5)
       .attr('filter', (d) => (d.isSanctioned ? 'drop-shadow(0 0 8px rgba(214, 40, 57, 0.7))' : 'none'));
 
-    // Inner icon / symbol
+    // Inner crisp vector icon
     node
-      .append('text')
-      .attr('class', 'material-symbols-outlined')
-      .attr('text-anchor', 'middle')
-      .attr('dominant-baseline', 'central')
-      .attr('font-size', '14px')
+      .append('path')
+      .attr('d', (d) => {
+        if (d.isSanctioned) {
+          // Warning triangle with exclamation mark
+          return 'M 0,-7 L 7,6 L -7,6 Z M -0.8,-2 L 0.8,-2 L 0.6,2 L -0.6,2 Z M -0.8,3.3 L 0.8,3.3 L 0.8,4.7 L -0.8,4.7 Z';
+        }
+        if (d.label) {
+          // Crisp 5-point star
+          return 'M 0,-6.5 L 1.9,-1.9 L 6.8,-1.3 L 3.2,2.2 L 4.1,7 L 0,4.6 L -4.1,7 L -3.2,2.2 L -6.8,-1.3 L -1.9,-1.9 Z';
+        }
+        // Minimalist wallet vector
+        return 'M -6,-4.5 C -6,-5.3 -5.3,-6 -4.5,-6 L 4.5,-6 C 5.3,-6 6,-5.3 6,-4.5 L 6,4.5 C 6,5.3 5.3,6 4.5,6 L -4.5,6 C -5.3,6 -6,5.3 -6,4.5 Z M 1.5,-1 C 1.5,-1.7 2.1,-2.2 2.8,-2.2 L 6,-2.2 L 6,1.2 L 2.8,1.2 C 2.1,1.2 1.5,0.7 1.5,0 Z';
+      })
       .attr('fill', '#ffffff')
-      .text((d) => {
-        if (d.isSanctioned) return 'warning';
-        if (d.label) return 'star';
-        return 'account_balance_wallet';
-      });
+      .attr('fill-rule', 'evenodd');
 
     // Node Address Label below circle
     node
