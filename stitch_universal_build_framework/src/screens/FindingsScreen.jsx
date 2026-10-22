@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useInvestigation } from '../context/InvestigationContext';
 import { getReportUrl } from '../api/client';
-import { AlertTriangle, CheckCircle, ShieldAlert, FileText, Check } from 'lucide-react';
+import { AlertTriangle, CheckCircle, ShieldAlert, FileText, Check, BookOpen } from 'lucide-react';
 
 export const FindingsScreen = () => {
   const {
@@ -89,15 +89,20 @@ export const FindingsScreen = () => {
       {/* Narrative Summary Section */}
       <section className="bg-surface-container rounded-xl p-6 border-l-4 border-l-primary shadow-sm relative overflow-hidden">
         <div className="flex items-center gap-2 mb-3">
-          <span className="material-symbols-outlined text-primary text-[22px]">auto_stories</span>
+          <BookOpen className="w-5 h-5 text-primary shrink-0" />
           <h2 className="font-headline-md text-xl font-bold text-on-surface">
             What This Trail Shows
           </h2>
         </div>
 
-        <div className="font-body-md text-sm text-on-surface space-y-3 leading-relaxed">
+        <div className="narrative-container font-body-md text-sm text-on-surface space-y-3 leading-relaxed">
           {narrativeParagraphs && narrativeParagraphs.length > 0 ? (
-            narrativeParagraphs.map((para, index) => <p key={index}>{para}</p>)
+            narrativeParagraphs.map((para, index) => (
+              <p
+                key={index}
+                dangerouslySetInnerHTML={{ __html: para }}
+              />
+            ))
           ) : (
             <p className="text-on-surface-variant italic">
               No active narrative generated yet. Load a case or trace an address in the Investigate tab to view detailed behavioral analysis.
